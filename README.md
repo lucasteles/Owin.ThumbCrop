@@ -1,3 +1,6 @@
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://csmacnz.mit-license.org)
+[![Nuget](https://img.shields.io/nuget/v/ModelViewBinder.svg)](https://www.nuget.org/packages/Owin.ThumbCrop /)
+
 # Owin.ThumbCrop
 
 is a middleware for create thumb based in your webapp assets
