@@ -12,6 +12,7 @@ namespace Owin.ThumbCrop
     {
         private readonly RequestDelegate _next;
         private readonly ThumbCropConfig _config;
+
         public ThumbMiddleware(RequestDelegate next, ThumbCropConfig config)
         {
             _next = next;
@@ -20,7 +21,15 @@ namespace Owin.ThumbCrop
 
         public async Task Invoke(HttpContext context)
         {
-            var ret = await ProcessRequest(context);
+            var ret = false;
+
+            if (_config.UseCache && _config.CacheManager.TryGet(context, out var fileData))
+            {
+                ret = true;
+                await WriteResponse(context, fileData);
+            }
+            else
+                ret = await ProcessRequest(context);
 
             if (!ret)
                 await _next.Invoke(context);
@@ -78,17 +87,28 @@ namespace Owin.ThumbCrop
                 {
                     var fileName = Path.GetFileName(filePath);
                     var stream = Thumbnail.Convert(image);
-                    context.Response.ContentType = "image/png";
                     var data = stream.ToArray();
-                    await context.Response.Body.WriteAsync(data, 0, data.Length);
-                    context.Response.Body.Flush();
+                    await WriteResponse(context, data);
+
+                    _config.CacheManager.Put(
+                        data,
+                        _config.CacheExpireTime,
+                        context
+                    );
 
                     return true;
                 }
             }
         }
 
-        private static string CleanFilePath(string filePath)
+        private async Task WriteResponse(HttpContext context, byte[] file)
+        {
+            context.Response.ContentType = "image/png";
+            await context.Response.Body.WriteAsync(file, 0, file.Length);
+            context.Response.Body.Flush();
+        }
+
+        private string CleanFilePath(string filePath)
         {
             if (filePath == null) return null;
 
@@ -99,9 +119,7 @@ namespace Owin.ThumbCrop
                 var fileNameFragments = fileName.Split('.');
                 if (fileNameFragments.Length > 1)
                 {
-                    filePath = filePath.Replace(
-                        fileName,
-                        $"{fileNameFragments[0]}.{fileNameFragments[1]}")
+                    filePath = filePath.Substring(0, filePath.LastIndexOf(_config.UrlPattern))
                         .Replace("/", "\\");
                     filePath = filePath.Remove(0, 1);
                 }

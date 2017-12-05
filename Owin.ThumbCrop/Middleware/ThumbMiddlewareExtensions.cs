@@ -18,6 +18,9 @@ namespace Owin.ThumbCrop
             if (config == null)
                 config = new ThumbCropConfig();
 
+            if (config.CacheManager == null && config.UseCache)
+                config.CacheManager = new InMemoryCacheManager();
+
             builder.MapWhen(
              context => context.Request.Path.ToString().EndsWith(config.UrlPattern),
 
