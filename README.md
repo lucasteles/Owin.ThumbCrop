@@ -67,5 +67,29 @@ Just put the `UrlPattern` at the end of your image URL and pass the transformati
 
 ### Thumb Options
 
-
+| Name       | Type           | Values                                                                                                             | Description                                      |
+|------------|----------------|--------------------------------------------------------------------------------------------------------------------|--------------------------------------------------|
+| width      | int            |                                                                                                                    | Defines the width                                |
+| height     | int            |                                                                                                                    | Defines the height                               |
+| crop       | bool           |                                                                                                                    | Defines if will crop on resize                   |
+| refpoint   | ReferencePoint | TopLeft,  TopCenter,  TopRight,  MiddleLeft,  MiddleCenter,  MiddleRight,  BottomLeft,  BottomCenter,  BottomRight | Defines the reference point when resize and crop |
+| flip       | FlipType       | Horizontal, Vertical                                                                                               | Flip the image based on parameter                |
+| opacity    | int            | 0 ... 100                                                                                                          | Set the image opacity                            |
+| rotate     | int            | 0 ... 360                                                                                                          | Rotate image                                     |
+| hue        | int            |                                                                                                                    | Set image hue                                    |
+| oil        | int            |                                                                                                                    | Apply Oil Filter                                 |
+| pixelate   | int            |                                                                                                                    | Apply pixelate filter                            |
+| contrast   | int            |                                                                                                                    | Apply contrast                                   |
+| brightness | int            |                                                                                                                    | Apply brightness                                 |
+| blur       | bool           |                                                                                                                    | Apply blur                                       |
+| sharpening | bool           |                                                                                                                    | Apply sharpening                                 |
+| invert     | bool           |                                                                                                                    | Invert image colors                              |
+| glow       | bool           |                                                                                                                    | Apply Glow                                       |
+| BlackWhite | bool           |                                                                                                                    | Set image as black and white only                |
+| Grayscale  | bool           |                                                                                                                    | Set image as grayscale                           |
+| Lomograph  | bool           |                                                                                                                    | Apply Lomograph filter                           |
+| Polaroid   | bool           |                                                                                                                    | Apply Polaroid filter                            |
+| Sepia      | bool           |                                                                                                                    | Apply Sepia filter                               |
+| Kodachrome | bool           |                                                                                                                    |  Apply Kodachrome filter                         |
+| Vignette   | bool           |                                                                                                                    | Apply Vignette filter                            |
 
