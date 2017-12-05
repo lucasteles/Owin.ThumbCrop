@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using SixLabors.Primitives;
 using System;
 using System.IO;
@@ -31,13 +32,17 @@ namespace Owin.ThumbCrop
             var crop = false;
             var width = 100;
             var height = 100;
+            var flip = FlipType.None;
 
 
             if (context.Request.Query.TryGetValue(nameof(refpoint), out var refpointValue))
                 Enum.TryParse(refpointValue.ToString(), out refpoint);
 
-            if (context.Request.Query.TryGetValue(nameof(crop), out var cropValue))
-                bool.TryParse(cropValue.ToString(), out crop);
+            if (context.Request.Query.TryGetValue(nameof(flip), out var flipValue))
+                Enum.TryParse(flipValue.ToString(), out flip);
+
+            if (context.Request.Query.TryGetValue(nameof(crop), out var _))
+                crop = true;
 
             if (context.Request.Query.TryGetValue(nameof(width), out var widthValue))
                 int.TryParse(widthValue.ToString(), out width);
@@ -58,9 +63,16 @@ namespace Owin.ThumbCrop
             var size = new Size(width, height);
             using (var img = Image.Load(filePath))
             {
-                var image = crop ?
-                    Thumbnail.Create(img, size, refpoint) :
-                    Thumbnail.Resize(img, size);
+                var image = img;
+
+                if (flip != FlipType.None)
+                    image = Thumbnail.Flip(image, flip);
+
+                image = crop ?
+                   Thumbnail.Create(image, size, refpoint) :
+                   Thumbnail.Resize(image, size);
+
+                ApplyFilters(image, context.Request.Query);
 
                 using (image)
                 {
@@ -71,33 +83,12 @@ namespace Owin.ThumbCrop
                     await context.Response.Body.WriteAsync(data, 0, data.Length);
                     context.Response.Body.Flush();
 
-                    //if (configuration.Thumb.EnableCache
-                    //    && context.Cache[fileName] == null
-                    //)
-                    //{
-                    //    var cachePriority = CacheItemPriority.Normal;
-                    //    if (configuration.Thumb.CachePriority > 0)
-                    //    {
-                    //        Enum.TryParse(configuration.Thumb.CachePriority.ToString(), out cachePriority);
-                    //    }
-
-                    //    context.Cache.Add(
-                    //        fileName,
-                    //        image,
-                    //        null,
-                    //        DateTime.Now.AddMilliseconds(configuration.Thumb.Expiration),
-                    //        TimeSpan.FromMilliseconds(configuration.Thumb.SlidingExpiration),
-                    //        cachePriority,
-                    //        null
-                    //    );
-                    //}
-
                     return true;
                 }
             }
         }
 
-        private string CleanFilePath(string filePath)
+        private static string CleanFilePath(string filePath)
         {
             if (filePath == null) return null;
 
@@ -117,6 +108,22 @@ namespace Owin.ThumbCrop
             }
 
             return filePath;
+        }
+
+        private static void ApplyFilters(Image<Rgba32> image, IQueryCollection query)
+        {
+            var boolFilters = Thumbnail.GetImageBoolProcessors();
+            foreach (var item in boolFilters)
+                if (query.TryGetValue(item.Key, out var _))
+                    Thumbnail.SetImageAttr(image, item.Value);
+
+            var floatFilters = Thumbnail.GetImageFloatProcessors();
+            foreach (var item in floatFilters)
+                if (query.TryGetValue(item.Key, out var floatValue))
+                    if (float.TryParse(floatValue, out var value))
+                        Thumbnail.SetImageAttr(image, item.Value(value));
+                    else
+                        Thumbnail.SetImageAttr(image, item.Value(0));
         }
     }
 }
