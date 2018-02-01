@@ -143,13 +143,9 @@ namespace Owin.ThumbCrop
             if (propH != propW)
             {
                 if (fitInside)
-                {
                     newProp = (propW < propH) ? propW : propH;
-                }
                 else
-                {
                     newProp = (propW > propH) ? propW : propH;
-                }
 
                 result.Width = (int)(original.Width * newProp);
                 result.Height = (int)(original.Height * newProp);

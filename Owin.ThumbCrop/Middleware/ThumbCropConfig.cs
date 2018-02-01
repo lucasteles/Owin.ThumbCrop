@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Owin.ThumbCrop.ImageSource;
+using System;
+using System.Collections.Generic;
 
 namespace Owin.ThumbCrop
 {
@@ -11,6 +13,8 @@ namespace Owin.ThumbCrop
         public string UrlPattern { get; set; } = ".thumb.axd";
 
         public IThumbCacheManager CacheManager { get; set; }
+
+        public IEnumerable<IImageSource> ImageSources { get; set; }
 
         public string NotFoundFile { get; set; }
         public TimeSpan CacheExpireTime { get; set; } = TimeSpan.FromHours(1);

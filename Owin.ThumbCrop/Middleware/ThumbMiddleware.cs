@@ -59,18 +59,25 @@ namespace Owin.ThumbCrop
             if (context.Request.Query.TryGetValue(nameof(height), out var heigtValue))
                 int.TryParse(heigtValue.ToString(), out height);
 
-            var filePath = CleanFilePath(context.Request.Path);
+            string fileName = null;
+            Stream fileStream = null;
 
-            if (string.IsNullOrWhiteSpace(filePath))
-                filePath = Path.Combine(_config.BasePath, _config.NotFoundFile);
-            else
-                filePath = Path.Combine(_config.BasePath, filePath);
+            foreach (var source in _config.ImageSources)
+            {
+                var result = await source.TryGetImageStream(context.Request.Path, _config);
+                if (result.Success)
+                {
+                    fileName = result.FileName;
+                    fileStream = result.FileStream;
+                    break;
+                }
+            }
 
-            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
-                return false;
+            if (fileStream == null) return false;
 
             var size = new Size(width, height);
-            using (var img = Image.Load(filePath))
+
+            using (var img = Image.Load(fileStream))
             {
                 var image = img;
 
@@ -85,7 +92,6 @@ namespace Owin.ThumbCrop
 
                 using (image)
                 {
-                    var fileName = Path.GetFileName(filePath);
                     var stream = Thumbnail.Convert(image);
                     var data = stream.ToArray();
                     await WriteResponse(context, data);
@@ -101,32 +107,13 @@ namespace Owin.ThumbCrop
             }
         }
 
-        private async Task WriteResponse(HttpContext context, byte[] file)
+        private async static Task WriteResponse(HttpContext context, byte[] file)
         {
             context.Response.ContentType = "image/png";
             await context.Response.Body.WriteAsync(file, 0, file.Length);
             context.Response.Body.Flush();
         }
 
-        private string CleanFilePath(string filePath)
-        {
-            if (filePath == null) return null;
-
-            var fileName = Path.GetFileName(filePath);
-
-            if (!string.IsNullOrWhiteSpace(fileName))
-            {
-                var fileNameFragments = fileName.Split('.');
-                if (fileNameFragments.Length > 1)
-                {
-                    filePath = filePath.Substring(0, filePath.LastIndexOf(_config.UrlPattern))
-                        .Replace("/", "\\");
-                    filePath = filePath.Remove(0, 1);
-                }
-            }
-
-            return filePath;
-        }
 
         private static void ApplyFilters(Image<Rgba32> image, IQueryCollection query)
         {
