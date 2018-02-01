@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
      <PackageId>Owin.ThumbCrop.AzureStorage</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.1</PackageVersion>
     <Authors>Lucas Teles</Authors>
     <Description>Azure storage source for Owin.ThumbCrop</Description>
     <RepositoryUrl>https://github.com/lucasteles/Owin.ThumbCrop</RepositoryUrl>

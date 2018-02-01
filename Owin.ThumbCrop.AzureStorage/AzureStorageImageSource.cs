@@ -1,10 +1,9 @@
 ﻿using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Owin.ThumbCrop.ImageSource;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Owin.ThumbCrop
+namespace Owin.ThumbCrop.ImageSource
 {
     public class AzureStorageImageSource : IImageSource
     {
@@ -15,7 +14,6 @@ namespace Owin.ThumbCrop
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             var blobClient = storageAccount.CreateCloudBlobClient();
             _container = blobClient.GetContainerReference(containerName);
-
         }
 
         public async Task<(bool Success, string FileName, Stream FileStream)> TryGetImageStream(string requestUrl, ThumbCropConfig config)
@@ -24,7 +22,7 @@ namespace Owin.ThumbCrop
 
             var fileName = Path.GetFileName(filePath);
 
-            var blob = await _container.GetBlobReferenceFromServerAsync(fileName);
+            var blob = _container.GetBlobReference(fileName);
 
             if (!(await blob.ExistsAsync()))
                 return await ImageSourceTools.None;
