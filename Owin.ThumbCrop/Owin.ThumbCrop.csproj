@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Owin.ThumbCrop</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <Authors>Lucas Teles</Authors>
     <Description>Owin middleware for create thumb images (https://github.com/lucasteles/Owin.ThumbCrop) </Description>
     <RepositoryUrl>https://github.com/lucasteles/Owin.ThumbCrop</RepositoryUrl>
@@ -11,6 +11,9 @@
     <PackageReleaseNotes>First release</PackageReleaseNotes>
     <Copyright></Copyright>
     <PackageTags>Thumb Owin Image Png</PackageTags>
+    <RepositoryUrl>https://github.com/lucasteles/Owin.ThumbCrop</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/lucasteles/Owin.ThumbCrop</PackageProjectUrl>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,14 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+     <PackageId>Owin.ThumbCrop.AzureStorage</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>Lucas Teles</Authors>
+    <Description>Azure storage source for Owin.ThumbCrop</Description>
+    <RepositoryUrl>https://github.com/lucasteles/Owin.ThumbCrop</RepositoryUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <Copyright></Copyright>
+    <PackageTags>Thumb Owin Image Png Azure Storage</PackageTags>
+    <RepositoryUrl>https://github.com/lucasteles/Owin.ThumbCrop</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/lucasteles/Owin.ThumbCrop</PackageProjectUrl>
+    <PackageLicenseUrl>https://opensource.org/licenses/MIT</PackageLicenseUrl>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Owin.ThumbCrop" Version="2.0.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="8.7.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Owin.ThumbCrop\Owin.ThumbCrop.csproj" />
   </ItemGroup>
 
 </Project>
