@@ -148,7 +148,7 @@ If you want to first search in a local file system and if the file not exists th
 ```cs
 app.UseThumbCrop(config =>
 {
-    config.ImageSources = new[]
+    config.ImageSources = new IImageSource[]
     {
         new LocalFileImageSource(),
         new AzureStorageImageSource(connectionString, containerName),
