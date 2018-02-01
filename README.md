@@ -125,20 +125,20 @@ dotnet add package Owin.ThumbCrop.AzureStorage
 ```
 
 
-And configure your owin middleware to use de Azure storage data source
+And configure your owin middleware to use de Azure storage data source,
 
 ```cs
 app.UseThumbCrop(config =>
 {
     config.ImageSources = new[]
     {
-        new AzureStorageImageSource(connectionString, containerName)
+        new AzureStorageImageSource(connectionString,  allowedContainers: new []{ "cantainer1", "container2" })
     };
 });
 
 ```
 
-With this it will get the base image directly from the azure storage
+With this it will get the base image directly from the azure storage with the url `http://server/containerName/blobName`
 
 
 Because its possible to define a collection of sources, the middleware will use the first source which responds successfully.
