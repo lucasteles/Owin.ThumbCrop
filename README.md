@@ -124,7 +124,6 @@ or dotnet core CLI
 dotnet add package Owin.ThumbCrop.AzureStorage
 ```
 
-
 And configure your owin middleware to use de Azure storage data source,
 
 ```cs
